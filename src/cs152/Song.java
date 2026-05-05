@@ -10,9 +10,7 @@ public class Song {
     private String genre;
     private boolean explicit;
 
-    /**
-     * Constructor to initialize a Song object.
-     */
+    // Constructor to initialize a Song object.
     public Song(String name, String artist, String genre, boolean explicit) {
         this.name = name;
         this.artist = artist;
@@ -21,21 +19,10 @@ public class Song {
     }
 
     // Getters
-    public String getName() {
-        return name;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public boolean isExplicit() {
-        return explicit;
-    }
+    public String getName() { return name; }
+    public String getArtist() {return artist; }
+    public String getGenre() { return genre; }
+    public boolean isExplicit() { return explicit; }
 
     // NAME - ARTIST - GENRE(S) - EXPLICIT/CLEAN format
     @Override

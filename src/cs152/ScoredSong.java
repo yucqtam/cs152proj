@@ -47,9 +47,6 @@ public class ScoredSong {
 
     @Override
     public String toString() {
-        return song.toString() +
-                " | genreScore=" + genreScore +
-                ", artistScore=" + artistScore +
-                ", totalScore=" + totalScore;
+        return song.toString();
     }
 }

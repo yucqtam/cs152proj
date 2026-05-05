@@ -8,19 +8,51 @@ public class Main {
         SongLoader loader = new SongLoader();
 
         try {
-            ArrayList<Song> songs = loader.loadSongs("dataset/musicDataset.csv"); // may change when uploaded to github
-
-            for (int i = 0; i < 10 && i < songs.size(); i++) {		// remove later. test to check if it can scan csv file
-                System.out.println(songs.get(i));
-            }
-            System.out.println();
+            ArrayList<Song> songs = loader.loadSongs("dataset/musicDataset.csv");
 
             MusicLibrary library = new MusicLibrary(songs);
-            System.out.println("catalog size: " + library.size());
+            UserPreferences prefs = new UserPreferences();
+
+            // preference sample
+            prefs.addPreferredGenre("pop");
+            prefs.addPreferredGenre("christmas");
+
+            prefs.addPreferredArtist("Taylor Swift");
+            prefs.addPreferredArtist("The Weeknd");
+            prefs.addPreferredArtist("Rihanna");
+
+            // exclude sample
+            prefs.addExcludedArtist("Central Cee");
+            prefs.addExcludedArtist("Selena Gomez");
+            prefs.addExcludedGenre("stutter house");
+
+            // explicity and length preference
+            prefs.setAllowExplicit(false);
+            prefs.setDesiredPlaylistLength(10);
+
+            RecommendationEngine1 engine1 = new RecommendationEngine1();
+            RecommendationEngine2 engine2 = new RecommendationEngine2();
+
+            ArrayList<ScoredSong> playlist1 = engine1.generatePlaylist(library, prefs);
+            ArrayList<ScoredSong> playlist2 = engine2.generatePlaylist(library, prefs);
+
+            System.out.println("Catalog size: " + library.size());
             System.out.println();
 
-            for (int i = 0; i < 10 && i < library.getSongs().size(); i++) { //  test to compare if same array as when first reading csv file
-                System.out.println(library.getSongs().get(i));
+            System.out.println("Generated Playlist 1");
+            System.out.println("------------------------------------------");
+
+            for (ScoredSong scoredSong : playlist1) {
+                System.out.println(scoredSong);
+            }
+
+            System.out.println();
+
+            System.out.println("Generated Playlist 2");
+            System.out.println("-------------------------------------------");
+
+            for (ScoredSong scoredSong : playlist2) {
+                System.out.println(scoredSong);
             }
         }
         catch (IOException e) {
