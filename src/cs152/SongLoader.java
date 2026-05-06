@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 /**
  * Loads songs from the musicDataset csv file with key attributes.
- * 
+ *
  * @author Timmy Vo
  */
 public class SongLoader {
@@ -25,7 +25,7 @@ public class SongLoader {
         while ((line = input.readLine()) != null) {
         	String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // 
 
-            if (parts.length > 9) {	// each row has 9 columns so this to prevent outofbounds
+            if (parts.length > 9) {	// checks that the row has enough columns before accessing index 9.
             	String name = parts[1];	// track name
             	boolean isExplicit = Boolean.parseBoolean(parts[5]);
             	String artist = parts[6];	// artist name

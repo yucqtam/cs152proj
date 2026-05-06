@@ -2,10 +2,22 @@ package cs152;
 
 import java.util.ArrayList;
 
+/**
+ * Filters songs based on the user's playlist preferences.
+ *
+ * The Filter class removes songs that should not appear in the generated
+ * playlist based on user-preferences and exclusions
+ *
+ * @author Timmy Vo
+ */
 public class Filter {
 
     /**
-     * Returns songs that aren't filtered out
+     * Returns a list of songs that are not excluded by the user's preferences.
+     *
+     * @param library, the music library containing all available songs
+     * @param prefs, the user's playlist preferences
+     * @return an ArrayList of songs that pass the filter
      */
     public ArrayList<Song> filterSongs(MusicLibrary library, UserPreferences prefs) {
         ArrayList<Song> filteredSongs = new ArrayList<Song>();
@@ -20,11 +32,11 @@ public class Filter {
     }
 
     /**
-     * Determines a song's exclusion
-     * - it has no genre field
-     * - it is explicit and the user does not allow explicit songs
-     * - its artist is blocked
-     * - its genre is blocked
+     * Determines whether a song should be excluded from the playlist.
+     *
+     * @param song, the song being checked
+     * @param prefs, the user's playlist preferences
+     * @return true if the song should be excluded, false otherwise
      */
     private boolean shouldExclude(Song song, UserPreferences prefs) {
         boolean exclude = false;
@@ -46,7 +58,10 @@ public class Filter {
     }
 
     /**
-     * Checks whether the user selected at least one preferred genre or artist.
+     * Checks whether the user entered at least one preferred genre or artist.
+     *
+     * @param prefs, the user's playlist preferences
+     * @return true if the user has at least one preferred genre or artist, false otherwise
      */
     public boolean hasPreferences(UserPreferences prefs) {
         return !prefs.getPreferredGenres().isEmpty() ||
@@ -54,7 +69,11 @@ public class Filter {
     }
 
     /**
-     * checks if a list contains a specific string
+     * Checks whether a list contains a target string, ignoring case.
+     *
+     * @param list, the list of strings to search
+     * @param target, the target string to find
+     * @return true if the list contains the target string, false otherwise
      */
     public boolean containsIgnoreCase(ArrayList<String> list, String target) {
         boolean found = false;
@@ -76,7 +95,11 @@ public class Filter {
     }
 
     /**
-     * Checks whether a song's genre field contains a target genre.
+     * Checks whether a song's genre field contains any genre from a target list.
+     *
+     * @param songGenreField, the genre field from a song
+     * @param targetGenres, the list of genres to search for
+     * @return true if the song genre field contains a target genre, false otherwise
      */
     public boolean containsGenre(String songGenreField, ArrayList<String> targetGenres) {
         boolean found = false;
@@ -97,6 +120,13 @@ public class Filter {
         return found;
     }
 
+    /**
+     * Checks whether a song's genre field contains one target genre.
+     *
+     * @param songGenreField, the genre field from a song
+     * @param targetGenre, the genre to search for
+     * @return true if the song genre field contains the target genre, false otherwise
+     */
     public boolean containsGenre(String songGenreField, String targetGenre) {
         boolean found = false;
 

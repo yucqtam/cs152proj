@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 import static cs152.view.PreferencesPanel.*;
 
@@ -23,6 +24,7 @@ public class PlaylistPanel extends JPanel {
     private final JLabel    countLabel    = new JLabel("");
     private final JPanel    songList      = new JPanel();
     private final JScrollPane scrollPane;
+    private BiConsumer<ScoredSong, Boolean> onFeedback;
 
     // ─────────────────────────────────────────────────────────────────
 
@@ -74,6 +76,14 @@ public class PlaylistPanel extends JPanel {
     }
 
     // ── Public API ────────────────────────────────────────────────────
+
+    public void setOnFeedback(BiConsumer<ScoredSong, Boolean> onFeedback) {
+        this.onFeedback = onFeedback;
+    }
+
+    public void showFeedbackMessage(String message) {
+        subtitleLabel.setText("Feedback saved — " + message);
+    }
 
     /** Shows a spinner while generation is in progress. */
     public void showLoading() {
@@ -158,10 +168,25 @@ public class PlaylistPanel extends JPanel {
         textBlock.setBackground(SURFACE);
         textBlock.setLayout(new BoxLayout(textBlock, BoxLayout.Y_AXIS));
 
+        JPanel titleRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+        titleRow.setOpaque(false);
+        titleRow.setAlignmentX(LEFT_ALIGNMENT);
+
         JLabel nameLabel = new JLabel(song.getName());
         nameLabel.setFont(new Font("SansSerif", Font.BOLD, 13));
         nameLabel.setForeground(TEXT);
-        nameLabel.setAlignmentX(LEFT_ALIGNMENT);
+
+        titleRow.add(nameLabel);
+
+        if (song.isExplicit()) {
+            JLabel explicitBadge = new JLabel("E");
+            explicitBadge.setFont(new Font("Monospaced", Font.BOLD, 10));
+            explicitBadge.setForeground(new Color(250, 100, 100));
+            explicitBadge.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(250, 100, 100), 1),
+                    BorderFactory.createEmptyBorder(1, 5, 1, 5)));
+            titleRow.add(explicitBadge);
+        }
 
         JLabel artistLabel = new JLabel(song.getArtist());
         artistLabel.setFont(new Font("SansSerif", Font.PLAIN, 12));
@@ -174,7 +199,7 @@ public class PlaylistPanel extends JPanel {
         genreLabel.setForeground(new Color(90, 90, 110));
         genreLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-        textBlock.add(nameLabel);
+        textBlock.add(titleRow);
         textBlock.add(Box.createVerticalStrut(2));
         textBlock.add(artistLabel);
         textBlock.add(Box.createVerticalStrut(2));
@@ -192,17 +217,35 @@ public class PlaylistPanel extends JPanel {
 
         rightPanel.add(scoreLabel);
 
-        if (song.isExplicit()) {
-            JLabel explicitBadge = new JLabel("E");
-            explicitBadge.setFont(new Font("Monospaced", Font.BOLD, 10));
-            explicitBadge.setForeground(new Color(250, 100, 100));
-            explicitBadge.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(250, 100, 100), 1),
-                    BorderFactory.createEmptyBorder(1, 5, 1, 5)));
-            explicitBadge.setAlignmentX(RIGHT_ALIGNMENT);
-            rightPanel.add(Box.createVerticalStrut(4));
-            rightPanel.add(explicitBadge);
-        }
+        JPanel feedbackButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+        feedbackButtons.setBackground(SURFACE);
+
+        JButton likeButton = feedbackButton("Like");
+        JButton dislikeButton = feedbackButton("Dislike");
+
+        likeButton.addActionListener(e -> {
+            if (onFeedback != null) {
+                onFeedback.accept(ss, true);
+            }
+
+            likeButton.setEnabled(false);
+            dislikeButton.setEnabled(false);
+        });
+
+        dislikeButton.addActionListener(e -> {
+            if (onFeedback != null) {
+                onFeedback.accept(ss, false);
+            }
+
+            likeButton.setEnabled(false);
+            dislikeButton.setEnabled(false);
+        });
+
+        feedbackButtons.add(likeButton);
+        feedbackButtons.add(dislikeButton);
+
+        rightPanel.add(Box.createVerticalStrut(5));
+        rightPanel.add(feedbackButtons);
 
         card.add(numLabel, BorderLayout.WEST);
         card.add(textBlock, BorderLayout.CENTER);
@@ -245,6 +288,20 @@ public class PlaylistPanel extends JPanel {
     }
 
     // ── Utilities ─────────────────────────────────────────────────────
+
+    private static JButton feedbackButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 10));
+        button.setForeground(new Color(10, 10, 20));
+        button.setBackground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setOpaque(true);
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        button.setMargin(new Insets(2, 7, 2, 7));
+
+        return button;
+    }
 
     private static String truncate(String s, int max) {
         return s.length() > max ? s.substring(0, max) + "…" : s;

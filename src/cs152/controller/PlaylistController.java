@@ -132,4 +132,8 @@ public class PlaylistController {
         }
         return result;
     }
+
+    public void recordFeedback(Song song, boolean liked) {
+        engine2.recordFeedback(song, liked);
+    }
 }

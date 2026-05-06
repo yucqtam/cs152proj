@@ -10,7 +10,14 @@ public class Song {
     private String genre;
     private boolean explicit;
 
-    // Constructor to initialize a Song object.
+    /**
+     * Contructs a Song object with the given track information.
+     *
+     * @param name, the name of the track
+     * @param artist, the artist who performed the track
+     * @param genre, the genre or genres associated with the track
+     * @param explicit, true if the track contains explicit content, false otherwise
+     */
     public Song(String name, String artist, String genre, boolean explicit) {
         this.name = name;
         this.artist = artist;
@@ -24,10 +31,4 @@ public class Song {
     public String getGenre() { return genre; }
     public boolean isExplicit() { return explicit; }
 
-    // NAME - ARTIST - GENRE(S) - EXPLICIT/CLEAN format
-    @Override
-    public String toString() {
-        return name + " - " + artist + " (" + genre + ") " +
-               (explicit ? "[Explicit]" : "[Clean]");
-    }
 }

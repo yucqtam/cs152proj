@@ -33,21 +33,6 @@ public class UserPreferences {
         desiredPlaylistLength = 10;
     }
 
-    
-    public UserPreferences(ArrayList<String> preferredGenres,
-                           ArrayList<String> excludedGenres,
-                           ArrayList<String> preferredArtists,
-                           ArrayList<String> excludedArtists,
-                           boolean allowExplicit,
-                           int desiredPlaylistLength) {
-        this.preferredGenres = preferredGenres;
-        this.excludedGenres = excludedGenres;
-        this.preferredArtists = preferredArtists;
-        this.excludedArtists = excludedArtists;
-        this.allowExplicit = allowExplicit;
-        this.desiredPlaylistLength = desiredPlaylistLength;
-    }
-
     public ArrayList<String> getPreferredGenres() {
         return preferredGenres;
     }
@@ -70,22 +55,6 @@ public class UserPreferences {
 
     public int getDesiredPlaylistLength() {
         return desiredPlaylistLength;
-    }
-
-    public void setPreferredGenres(ArrayList<String> preferredGenres) {
-        this.preferredGenres = preferredGenres;
-    }
-
-    public void setExcludedGenres(ArrayList<String> excludedGenres) {
-        this.excludedGenres = excludedGenres;
-    }
-
-    public void setPreferredArtists(ArrayList<String> preferredArtists) {
-        this.preferredArtists = preferredArtists;
-    }
-
-    public void setExcludedArtists(ArrayList<String> excludedArtists) {
-        this.excludedArtists = excludedArtists;
     }
 
     public void setAllowExplicit(boolean allowExplicit) {
@@ -112,15 +81,4 @@ public class UserPreferences {
         excludedArtists.add(artist.toLowerCase().trim());
     }
 
-    @Override
-    public String toString() {
-        return "UserPreferences{" +
-                "preferredGenres=" + preferredGenres +
-                ", excludedGenres=" + excludedGenres +
-                ", preferredArtists=" + preferredArtists +
-                ", excludedArtists=" + excludedArtists +
-                ", allowExplicit=" + allowExplicit +
-                ", desiredPlaylistLength=" + desiredPlaylistLength +
-                '}';
-    }
 }

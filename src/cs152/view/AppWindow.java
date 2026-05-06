@@ -56,6 +56,11 @@ public class AppWindow extends JFrame {
         // Wire up the Generate button
         prefsPanel.setOnGenerate(this::onGenerateClicked);
 
+        playPanel.setOnFeedback((scoredSong, liked) -> {
+            controller.recordFeedback(scoredSong.getSong(), liked);
+            playPanel.showFeedbackMessage("Generate again to update recommendations.");
+        });
+
         // Show catalogue size once loaded
         if (controller.isLibraryLoaded()) {
             playPanel.setCatalogInfo(controller.getCatalogSize());

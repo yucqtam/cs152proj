@@ -4,22 +4,32 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
- * Recommendation Engine 1
+ * Recommendation engine that generates a genre-diverse discovery playlist.
  *
- * filters songs
- * creates a bucket/list for each preferred genre.
- * score matching song and put it in correct genre bucket
- * sort each bucket by score
- * pulls 1 song from each bucket in a rotation
- * tries to limit repeat artists
+ * Filters songs based on the user's preferences, places matching
+ * songs into genre buckets, sorts each bucket by score, and rotates through
+ * the buckets to create a more varied playlist. It also limits songs from
+ * repeated artists to 1
+ *
+ * @author Timmy Vo
  */
 public class RecommendationEngine1 {
     private final Filter filter;
 
+    /**
+     * Constructs a RecommendationEngine1 object with a Filter.
+     */
     public RecommendationEngine1() {
         filter = new Filter();
     }
 
+    /**
+     * Generates a playlist using the user's preferences.
+     *
+     * @param library, the music library containing available songs
+     * @param prefs, the user's playlist preferences
+     * @return an ArrayList of scored songs representing the generated playlist
+     */
     public ArrayList<ScoredSong> generatePlaylist(MusicLibrary library, UserPreferences prefs) {
         ArrayList<Song> filteredSongs = filter.filterSongs(library, prefs);
         ArrayList<ScoredSong> finalPlaylist = new ArrayList<ScoredSong>();
@@ -41,7 +51,7 @@ public class RecommendationEngine1 {
                 int totalScore = genreScore + artistScore;
 
                 if (totalScore > 0) {
-                    ScoredSong scoredSong = new ScoredSong(song, genreScore, artistScore);
+                    ScoredSong scoredSong = new ScoredSong(song, genreScore, artistScore, 0);
 
                     for (int i = 0; i < prefs.getPreferredGenres().size(); i++) {
                         String genre = prefs.getPreferredGenres().get(i);
@@ -92,6 +102,16 @@ public class RecommendationEngine1 {
         return finalPlaylist;
     }
 
+    /**
+     * Calculates a discovery genre score for a song.
+     *
+     * Songs receive more points for exact genre matches, partial genre matches,
+     * matching multiple preferred genres, and having multiple genres listed.
+     *
+     * @param song, the song being scored
+     * @param prefs, the user's playlist preferences
+     * @return the calculated genre score
+     */
     private int calculateDiscoveryGenreScore(Song song, UserPreferences prefs) {
         int score = 0;
         int matchedGenres = 0;
@@ -125,6 +145,16 @@ public class RecommendationEngine1 {
         return score;
     }
 
+    /**
+     * Calculates the discovery artist score for a song.
+     *
+     * This engine favors discovery by slightly reducing the score for preferred
+     * artists and slightly increasing the score for unfamiliar artists.
+     *
+     * @param song, the song being scored
+     * @param prefs, the user's playlist preferences
+     * @return the calculated artist score
+     */
     private int calculateDiscoveryArtistScore(Song song, UserPreferences prefs) {
         int score = 0;
 
@@ -138,6 +168,11 @@ public class RecommendationEngine1 {
         return score;
     }
 
+    /**
+     * Sorts a genre bucket from highest score to lowest score.
+     *
+     * @param playlist, the genre bucket to sort
+     */
     private void sortDiscoveryRecommendations(ArrayList<ScoredSong> playlist) {
         playlist.sort(new Comparator<ScoredSong>() {
             @Override
@@ -159,6 +194,13 @@ public class RecommendationEngine1 {
         });
     }
 
+    /**
+     * Counts how many times an artist appears in a playlist.
+     *
+     * @param playlist, the playlist being checked
+     * @param artist, the artist name to count
+     * @return the number of songs by the given artist
+     */
     private int countArtist(ArrayList<ScoredSong> playlist, String artist) {
         int count = 0;
 
@@ -173,6 +215,13 @@ public class RecommendationEngine1 {
         return count;
     }
 
+    /**
+     * Checks whether a song has already been added to a playlist.
+     *
+     * @param playlist, the playlist being checked
+     * @param song, the song to search for
+     * @return true if the song is already in the playlist, false otherwise
+     */
     private boolean alreadyAdded(ArrayList<ScoredSong> playlist, Song song) {
         boolean found = false;
 
@@ -190,6 +239,13 @@ public class RecommendationEngine1 {
         return found;
     }
 
+    /**
+     * Checks whether any genre bucket still has songs available.
+     *
+     * @param genreBuckets, the list of genre buckets
+     * @param bucketIndexes, the current index position for each bucket
+     * @return true if at least one bucket still has songs left, false otherwise
+     */
     private boolean stillHasAvailableSongs(ArrayList<ArrayList<ScoredSong>> genreBuckets, ArrayList<Integer> bucketIndexes) {
         boolean hasSongs = false;
 
@@ -202,6 +258,12 @@ public class RecommendationEngine1 {
         return hasSongs;
     }
 
+    /**
+     * Counts how many preferred genres were entered by the user.
+     *
+     * @param prefs, the user's playlist preferences
+     * @return the number of non-blank preferred genres
+     */
     private int countPreferredGenres(UserPreferences prefs) {
         int count = 0;
 
@@ -214,6 +276,13 @@ public class RecommendationEngine1 {
         return count;
     }
 
+    /**
+     * Counts how many of the user's preferred genres match a song.
+     *
+     * @param song, the song being checked
+     * @param prefs, the user's playlist preferences
+     * @return the number of preferred genres that match the song
+     */
     private int countMatchedPreferredGenres(Song song, UserPreferences prefs) {
         int count = 0;
 
