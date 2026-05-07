@@ -227,18 +227,22 @@ public class PlaylistPanel extends JPanel {
             if (onFeedback != null) {
                 onFeedback.accept(ss, true);
             }
-
             likeButton.setEnabled(false);
+            likeButton.setBackground(new java.awt.Color(34, 197, 94));   // green tint
+            likeButton.setForeground(java.awt.Color.WHITE);
             dislikeButton.setEnabled(false);
+            dislikeButton.setOpaque(true);
         });
-
+        
         dislikeButton.addActionListener(e -> {
             if (onFeedback != null) {
                 onFeedback.accept(ss, false);
             }
-
-            likeButton.setEnabled(false);
             dislikeButton.setEnabled(false);
+            dislikeButton.setBackground(new java.awt.Color(239, 68, 68)); // red tint
+            dislikeButton.setForeground(java.awt.Color.WHITE);
+            likeButton.setEnabled(false);
+            likeButton.setOpaque(true);
         });
 
         feedbackButtons.add(likeButton);
@@ -257,11 +261,13 @@ public class PlaylistPanel extends JPanel {
                 card.setBackground(SURFACE2);
                 textBlock.setBackground(SURFACE2);
                 rightPanel.setBackground(SURFACE2);
+                feedbackButtons.setBackground(SURFACE2);
             }
             @Override public void mouseExited(java.awt.event.MouseEvent e) {
                 card.setBackground(SURFACE);
                 textBlock.setBackground(SURFACE);
                 rightPanel.setBackground(SURFACE);
+                feedbackButtons.setBackground(SURFACE);
             }
         });
 
